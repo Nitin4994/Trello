@@ -1,0 +1,62 @@
+{% extends 'master_page2.html' %}
+{% block body %}
+
+    <h2 align="center">BOARDS</h2>
+
+
+    <table align="center">
+        <tbody>
+            <tr valign="top">
+                <td valign="top">
+                    <form action="/board/save/" method="post">{% csrf_token %}
+                        <table valign="top">
+                            <tbody valign="top">
+                            <tr><h4 align="center">Create a Board</h4></tr>
+                            <tr valign="top"><td>Board Title: <input type="text" name="boardName" value="" placeholder="Add Board Title"></td></tr>
+                            <tr valign="top"><td><input type="submit" value="Create Board"></td></tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    {% if boards %}
+                        <table align="top" border="1" cellpadding="10">
+                            <tbody>
+                                <tr><h4 align="center">Select a Board</h4></tr>
+                            {% for board in boards %}
+                                <tr>
+                                    <td><h3><a href="/categorie/{{ board.id }}">{{ board.boardName }}</a></h3></td>
+                                    <td><a href="/board/delete/{{ board.id }}">Delete Board</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <table border="1" cellpadding="10">
+                            <tr>
+                                {% if boards.has_other_pages %}
+                                    {% if boards.has_previous %}
+                                        <td><a href="?page={{ boards.previous_page_number }}">&laquo; Previous</a></td>
+                                    {% endif %}
+
+                                    {% for page_no in boards.paginator.page_range %}
+                                        <td><a href="?page={{ page_no }}">{{ page_no }}</a></td>
+                                    {% endfor %}
+
+                                    {% if boards.has_next %}
+                                        <td><a href="?page={{ boards.next_page_number }}">Next &raquo;</a></td>
+                                    {% endif %}
+                                {% endif %}
+                            </tr>
+                        </table>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+{% endblock %}

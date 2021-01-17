@@ -1,0 +1,114 @@
+{% extends 'master_page2.html' %}
+{% block body %}
+
+        <h3 align="center">Board: {{ board.boardName }}</h3>
+        <form action="/categorie/save/" method="post">{% csrf_token %}
+        <table align="center">
+            <tbody>
+            <tr><h4 align="center">Add a Categories</h4></tr>
+            <tr><td><input type="text" name="boardid" value="{{ board.id }}" hidden></td></tr>
+            <tr><td>Categorie Name: <input type="text" name="categorie" value="" placeholder="ex. Low, Medium, Priority"></td></tr>
+            <tr><td><input type="submit" value="Add Categorie"></td></tr>
+            </tbody>
+        </table>
+        </form>
+
+        {% if cate_dict %}
+        <table align="center" border="1" cellpadding="40" valign="top">
+            <tbody valign="top">
+                <tr>
+                    {% for cat,tasks in cate_dict.items %}
+                        <th>
+
+                            <table valign="top">
+                                <tbody>
+                                <tr valign="top">
+                                    <th valign="top">Categorie:  {{ cat.cateName }}</th>
+                                </tr>
+                                <tr valign="top">
+                                    <td><a href="/categorie/delete/{{ cat.id }}">Delete Categories</a></td>
+                                </tr>
+                                <tr>
+                                    <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table border="0" valign="top">
+                                            <tbody>
+                                                {% for task in tasks %}
+                                                    <tr>
+                                                        <td>Task Title:  {{ task.taskTitle }} </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Description:  {{ task.description }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                        {% if categories.count > 1 %}
+                                                            <form action="/task/move/" method="post">{% csrf_token %}
+                                                                <table border="0" valign="top">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td><input type="text" name="taskid" value="{{ task.id }}" hidden>
+                                                                                Move To:
+                                                                                <select name="moveCateid" >
+                                                                                    <option value="">--select--</option>
+                                                                                    {% for cate in categories %}
+                                                                                        {% if not cate.id == task.cateref.id %}
+                                                                                        <option value="{{ cate.id }}">{{ cate.cateName }}</option>
+                                                                                        {% endif %}
+                                                                                    {% endfor %}
+                                                                                </select>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><input type="submit" value="Move"></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </form>
+                                                        {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="/task/delete/{{ task.id }}">Delete Task</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                </tr>
+                                <form action="/task/save/" method="post">{% csrf_token %}
+                                <tr>
+                                    <th>Add Task</th>
+                                </tr>
+                                <tr>
+                                    <input type="text" name="cateid" value="{{ cat.id }}" hidden>
+                                    <td><input type="text" name="tasktitle" placeholder="Task Title"></td>
+                                </tr>
+                                <tr>
+                                    <td><textarea name="description" placeholder="Description"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="submit" value="Add Task"></td>
+                                </tr>
+                                </form>
+                                </tbody>
+                            </table>
+
+                        </th>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+        {% endif %}
+
+
+
+{% endblock %}
